@@ -43,23 +43,30 @@ namespace RW.Worker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            List<Uri> feeds = new();
+            feeds.Add(new Uri(@"https://www.techvisor.nl/Rss/RssArtikelen"));
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                // MAYBE DEPENDENCY INJECT AS SERVICE???
-                //ReadFeedTest();
-                //AddToDbTest();
+                ReadFeedTest(feeds);
+
+                /* ADD ARTICLE */ /*
+                article tmp = new();
+                tmp.title = "testing_from_linux";
+                tmp.link = "linktest";
+                tmp.publication = "pubtest";
+
+                AddToDbTest(tmp); */
+
                 //PrintDbItems();
-                LogToFile("ExecuteAsync");
-                LogToConsole("ExecuteAsync");
+
+                //LogToFile("ExecuteAsync");
+                //LogToConsole("ExecuteAsync");
                 await Task.Delay(10000, stoppingToken);
             }
         }
 
-        private async void ReadFeedTest() {
-            List<Uri> rssFeeds = new List<Uri> {
-                new Uri(@"https://www.techvisor.nl/Rss/RssArtikelen"),
-            };
-
+        private async void ReadFeedTest(List<Uri> rssFeeds) {
             var client = new HttpClient();
 
             foreach (var rssFeed in rssFeeds) {
@@ -81,16 +88,18 @@ namespace RW.Worker
             WriteLine($"{fi.PublishingDateString} - {fi.Title}\n{fi.Link}\n{fi.Description}\n---\n");
         }
 
-        private void AddToDbTest() {
+        private void AddToDbTest(article _article) {
             using var scope = _serviceScopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<RWDbContext>();
 
+            /*
             article tmp = new();
-            tmp.title = "testing";
+            tmp.title = "testing_from_linux";
             tmp.link = "linktest";
             tmp.publication = "pubtest";
+            */
 
-            dbContext.Add(tmp);
+            dbContext.Add(_article);
             dbContext.SaveChanges();
         }
 

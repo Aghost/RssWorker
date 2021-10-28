@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using RW.Data;
+using RW.Domain;
 
 namespace RW.Worker
 {

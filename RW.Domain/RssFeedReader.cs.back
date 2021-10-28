@@ -1,0 +1,31 @@
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Net.Http;
+using RW.Domain.Models;
+using CodeHollow.FeedReader;
+
+namespace RW.Domain
+{
+    public class RssFeedReader
+    {
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+
+        public RssFeedReader(IServiceScopeFactory serviceScopeFactory) {
+            _serviceScopeFactory = serviceScopeFactory;
+        }
+
+        public List<rssfeed> GetFeeds() {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<RWDbContext>();
+
+            return dbContext.rssfeeds.ToList();
+        }
+
+        public List<article> GetArticles() {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<RWDbContext>();
+
+            return dbContext.articles.ToList();
+        }
+    }
+}
